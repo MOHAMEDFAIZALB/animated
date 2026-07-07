@@ -808,6 +808,12 @@ h2 {
     padding: 2.5rem;
   }
 
+  .scroll-section {
+    padding: 10rem 5% 5rem;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
   .nav-links {
     display: none; 
   }
