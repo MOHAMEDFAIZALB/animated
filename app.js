@@ -209,7 +209,6 @@ const renderLoop = () => {
   }
 
   // 6. Fade out background animation as contact form enters viewport
-  const contactSection = document.getElementById("contact");
   const canvasContainer = document.querySelector(".canvas-container");
   if (contactSection && canvasContainer) {
     const contactRect = contactSection.getBoundingClientRect();
