@@ -816,4 +816,66 @@ h2 {
     flex-direction: column;
     gap: 2rem;
   }
+
+  .features-highlight-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .features-highlight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Features Highlight Grid --- */
+.features-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  margin-bottom: 6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 6rem;
+}
+
+.feat-card {
+  background: rgba(14, 16, 18, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  padding: 2.5rem;
+  border-radius: 8px;
+  transition: var(--transition-smooth);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.feat-card:hover {
+  border-color: var(--accent-color);
+  background: rgba(229, 193, 88, 0.02);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
+}
+
+.feat-icon {
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.feat-card h4 {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.feat-card p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  font-weight: 300;
 }

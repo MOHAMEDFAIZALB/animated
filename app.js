@@ -179,10 +179,17 @@ const renderLoop = () => {
     smoothContent.style.transform = `translate3d(0, -${Math.round(smoothScrollY)}px, 0)`;
   }
 
-  // 3. Map smoothScrollY to target frame index
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
-  if (maxScroll > 0) {
-    const scrollFraction = Math.max(0, Math.min(1, smoothScrollY / maxScroll));
+  // 3. Map smoothScrollY to target frame index (completing the animation 100% right before entering contact form)
+  const contactSection = document.getElementById("contact");
+  let maxScrollForAnimation = document.body.scrollHeight - window.innerHeight;
+  if (contactSection) {
+    const rect = contactSection.getBoundingClientRect();
+    const absoluteContactTop = rect.top + smoothScrollY;
+    maxScrollForAnimation = absoluteContactTop - window.innerHeight;
+  }
+
+  if (maxScrollForAnimation > 0) {
+    const scrollFraction = Math.max(0, Math.min(1, smoothScrollY / maxScrollForAnimation));
     targetFrameIndex = scrollFraction * (activeCfg.totalFrames - 1);
   }
 
