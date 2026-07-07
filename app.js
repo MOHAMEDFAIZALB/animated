@@ -40,7 +40,7 @@ if (!window.location.pathname.endsWith('/') && !window.location.pathname.match(/
 // Generate image source path based on layout mode
 const getFrameSrc = (mode, index) => {
   const cfg = CONFIG[mode];
-  return `${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
+  return `${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=17`;
 };
 
 // Preload Images for a specific layout mode progressively
