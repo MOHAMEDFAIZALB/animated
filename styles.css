@@ -6,7 +6,7 @@
   --accent-color: #e5c158; /* Premium Champagne Gold */
   --accent-hover: #bfa145;
   --accent-glow: rgba(229, 193, 88, 0.12);
-  --card-bg: rgba(14, 16, 18, 0.65); /* Rich Dark Translucent */
+  --card-bg: rgba(14, 16, 18, 0.35); /* More transparent glassmorphism */
   --card-border: rgba(229, 193, 88, 0.08); /* Gold-tinted border */
   --card-border-active: rgba(229, 193, 88, 0.25);
   
