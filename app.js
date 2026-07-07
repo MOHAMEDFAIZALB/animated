@@ -18,6 +18,7 @@ const CONFIG = {
 
 const canvas = document.getElementById("animation-canvas");
 const ctx = canvas.getContext("2d");
+const smoothContent = document.getElementById("smooth-content");
 
 // Loading Elements
 const loader = document.getElementById("loader");
@@ -44,7 +45,7 @@ const preloadImagesForMode = (mode, onProgress, onComplete) => {
 
   cfg.promise = new Promise((resolve) => {
     let count = 0;
-    const minRequired = Math.min(25, cfg.totalFrames); // Wait for only 25 frames (~10% load) to make the site load 10x faster!
+    const minRequired = Math.min(25, cfg.totalFrames); // Load first 25 frames for quick interactive start
     let resolved = false;
 
     for (let i = 1; i <= cfg.totalFrames; i++) {
@@ -92,38 +93,32 @@ const preloadImagesForMode = (mode, onProgress, onComplete) => {
 function drawImageProp(ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0.5) {
   if (!ctx || !img) return;
 
-  // Set high quality smoothing settings
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  // Keep aspect ratio
   let iw = img.width,
       ih = img.height,
       r = Math.min(w / iw, h / ih),
-      nw = iw * r,   // new prop. width
-      nh = ih * r,   // new prop. height
+      nw = iw * r,
+      nh = ih * r,
       cx, cy, cw, ch, ar = 1;
 
-  // Decide which gap to fill
   if (nw < w) ar = w / nw;                             
   if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh;
   nw *= ar;
   nh *= ar;
 
-  // Source rectangle
   cw = iw / (nw / w);
   ch = ih / (nh / h);
 
   cx = (iw - cw) * offsetX;
   cy = (ih - ch) * offsetY;
 
-  // Make sure source rectangle is valid
   if (cx < 0) cx = 0;
   if (cy < 0) cy = 0;
   if (cw > iw) cw = iw;
   if (ch > ih) ch = ih;
 
-  // Draw image aligned to integer boundaries to prevent sub-pixel blurring
   ctx.drawImage(
     img, 
     Math.floor(cx), 
@@ -137,13 +132,20 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX = 0.5, offsetY = 0.5) {
   );
 }
 
-// Resize Canvas to fill viewport (supporting High-DPI / Retina screens)
+// Resize Canvas to fill viewport
 const resizeCanvas = () => {
   const dpr = window.devicePixelRatio || 1;
   canvas.width = window.innerWidth * dpr;
   canvas.height = window.innerHeight * dpr;
   canvas.style.width = `${window.innerWidth}px`;
   canvas.style.height = `${window.innerHeight}px`;
+};
+
+// Sync virtual scroll body height
+const syncBodyHeight = () => {
+  if (smoothContent) {
+    document.body.style.height = `${smoothContent.scrollHeight}px`;
+  }
 };
 
 // Detect active layout mode (desktop vs. mobile)
@@ -154,31 +156,56 @@ const getActiveLayoutMode = () => {
 let currentLayoutMode = getActiveLayoutMode();
 let currentFrameIndex = 0;
 let targetFrameIndex = 0;
+let smoothScrollY = 0;
 let isRunning = false;
 
-// Smooth Render Loop (Lerping frame index)
+// Smooth Render Loop (Lerping scroll position and frame index)
 const renderLoop = () => {
   const activeCfg = CONFIG[currentLayoutMode];
-  // Smoothly interpolate current frame to target frame
-  const lerpFactor = 0.08; 
-  const diff = targetFrameIndex - currentFrameIndex;
+  const lerpFactor = 0.08; // Adjust for scroll/inertia feel (lower is smoother)
 
-  if (Math.abs(diff) < 0.01) {
-    currentFrameIndex = targetFrameIndex;
-    isRunning = false; // Stop the loop when target frame is reached
+  // 1. Lerp scroll position
+  const targetScrollY = window.scrollY || document.documentElement.scrollTop;
+  const scrollDiff = targetScrollY - smoothScrollY;
+
+  if (Math.abs(scrollDiff) < 0.05) {
+    smoothScrollY = targetScrollY;
   } else {
-    currentFrameIndex += diff * lerpFactor;
+    smoothScrollY += scrollDiff * lerpFactor;
   }
 
+  // 2. Translate floating content container smoothly
+  if (smoothContent) {
+    smoothContent.style.transform = `translate3d(0, -${Math.round(smoothScrollY)}px, 0)`;
+  }
+
+  // 3. Map smoothScrollY to target frame index
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  if (maxScroll > 0) {
+    const scrollFraction = Math.max(0, Math.min(1, smoothScrollY / maxScroll));
+    targetFrameIndex = scrollFraction * (activeCfg.totalFrames - 1);
+  }
+
+  // 4. Lerp current frame index to target frame index
+  const frameDiff = targetFrameIndex - currentFrameIndex;
+  if (Math.abs(frameDiff) < 0.01) {
+    currentFrameIndex = targetFrameIndex;
+  } else {
+    currentFrameIndex += frameDiff * lerpFactor;
+  }
+
+  // 5. Draw frame
   const roundedFrame = Math.round(currentFrameIndex);
   if (activeCfg.images[roundedFrame]) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Draw using full canvas.width and height (already scaled by DPR)
     drawImageProp(ctx, activeCfg.images[roundedFrame], 0, 0, canvas.width, canvas.height);
   }
 
-  if (isRunning) {
+  // Continue rendering if positions haven't settled
+  if (Math.abs(scrollDiff) > 0.05 || Math.abs(frameDiff) > 0.01) {
     requestAnimationFrame(renderLoop);
+  } else {
+    isRunning = false;
   }
 };
 
@@ -190,33 +217,22 @@ const triggerRender = () => {
   }
 };
 
-// Update target frame index based on scroll position and active config
+// Update scroll target and run animation frame
 const updateFrameIndex = () => {
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  
-  if (maxScroll <= 0) return;
-
-  const activeCfg = CONFIG[currentLayoutMode];
-  const scrollFraction = scrollTop / maxScroll;
-  targetFrameIndex = Math.min(
-    activeCfg.totalFrames - 1,
-    Math.floor(scrollFraction * activeCfg.totalFrames)
-  );
-
   triggerRender();
 };
 
 // Handle window resize dynamically and switch layouts
 const handleResize = () => {
   resizeCanvas();
+  syncBodyHeight();
 
   const activeMode = getActiveLayoutMode();
   if (activeMode !== currentLayoutMode) {
     currentLayoutMode = activeMode;
     // Load the other set if not already loaded
     preloadImagesForMode(activeMode);
-    // Map current progress to the new frame size
+    // Reset scroll metrics
     updateFrameIndex();
   } else {
     triggerRender();
@@ -246,7 +262,6 @@ const setupIntersectionObserver = () => {
 
 // Initialize App
 const init = async () => {
-  // Set up resize handler and run it initially to set dimensions with DPR
   window.addEventListener("resize", handleResize);
   resizeCanvas();
 
@@ -266,18 +281,24 @@ const init = async () => {
       setTimeout(() => {
         loader.style.opacity = "0";
         loader.style.visibility = "hidden";
+        // Calculate scroll heights after loader hides and elements render
+        syncBodyHeight();
       }, 600);
     }
   );
   
-  // Start the smooth continuous animation loop
-  renderLoop();
+  // Initial draw and trigger loop
+  triggerRender();
 
   // Scroll listener
   window.addEventListener("scroll", updateFrameIndex);
 
   // Setup text reveals
   setupIntersectionObserver();
+
+  // Extra height syncs to account for late stylesheet/fonts loading
+  setTimeout(syncBodyHeight, 1000);
+  setTimeout(syncBodyHeight, 2500);
 
   // Background-preload the other layout mode so switching on resize is instant
   const inactiveMode = initialMode === "desktop" ? "mobile" : "desktop";

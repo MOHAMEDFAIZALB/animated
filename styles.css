@@ -141,9 +141,21 @@ body {
 
 /* --- Main Layout & Navigation --- */
 #scroll-container {
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 10;
+}
+
+#smooth-content {
+  width: 100%;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .navbar {
