@@ -838,28 +838,67 @@ h2 {
     gap: 1.5rem;
   }
 
+  .features-marquee-container {
+    display: flex;
+    gap: 1.5rem;
+    padding-bottom: 4rem;
+    margin-bottom: 4rem;
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+
   .features-highlight-grid {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-    margin-bottom: 3rem;
-    padding-bottom: 3rem;
+    display: flex;
+    grid-template-columns: none;
+    flex-shrink: 0;
+    gap: 1.5rem;
+    width: max-content;
+    animation: marqueeLoop 25s linear infinite;
+    will-change: transform;
+  }
+
+  .features-highlight-grid.duplicate {
+    display: flex;
+  }
+
+  .features-marquee-container:hover .features-highlight-grid,
+  .features-marquee-container:active .features-highlight-grid {
+    animation-play-state: paused;
+  }
+
+  .feat-card {
+    width: 280px;
+    flex-shrink: 0;
   }
 }
 
-@media (max-width: 576px) {
-  .features-highlight-grid {
-    grid-template-columns: 1fr;
+@keyframes marqueeLoop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(calc(-100% - 1.5rem), 0, 0);
   }
 }
 
-/* --- Features Highlight Grid --- */
+/* --- Features Highlight Grid & Marquee --- */
+.features-marquee-container {
+  overflow: hidden;
+  width: 100%;
+  display: block;
+  margin-bottom: 6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 6rem;
+}
+
 .features-highlight-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2.5rem;
-  margin-bottom: 6rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 6rem;
+}
+
+.features-highlight-grid.duplicate {
+  display: none; /* Hide duplicate on desktop */
 }
 
 .feat-card {
