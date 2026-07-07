@@ -139,6 +139,41 @@ const getActiveLayoutMode = () => {
 let currentLayoutMode = getActiveLayoutMode();
 let currentFrameIndex = 0;
 let targetFrameIndex = 0;
+let isRunning = false;
+
+// Smooth Render Loop (Lerping frame index)
+const renderLoop = () => {
+  const activeCfg = CONFIG[currentLayoutMode];
+  // Smoothly interpolate current frame to target frame
+  const lerpFactor = 0.08; 
+  const diff = targetFrameIndex - currentFrameIndex;
+
+  if (Math.abs(diff) < 0.01) {
+    currentFrameIndex = targetFrameIndex;
+    isRunning = false; // Stop the loop when target frame is reached
+  } else {
+    currentFrameIndex += diff * lerpFactor;
+  }
+
+  const roundedFrame = Math.round(currentFrameIndex);
+  if (activeCfg.images[roundedFrame]) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw using full canvas.width and height (already scaled by DPR)
+    drawImageProp(ctx, activeCfg.images[roundedFrame], 0, 0, canvas.width, canvas.height);
+  }
+
+  if (isRunning) {
+    requestAnimationFrame(renderLoop);
+  }
+};
+
+// Start loop if it is not already running
+const triggerRender = () => {
+  if (!isRunning) {
+    isRunning = true;
+    requestAnimationFrame(renderLoop);
+  }
+};
 
 // Update target frame index based on scroll position and active config
 const updateFrameIndex = () => {
@@ -153,29 +188,8 @@ const updateFrameIndex = () => {
     activeCfg.totalFrames - 1,
     Math.floor(scrollFraction * activeCfg.totalFrames)
   );
-};
 
-// Smooth Render Loop (Lerping frame index)
-const renderLoop = () => {
-  const activeCfg = CONFIG[currentLayoutMode];
-  // Smoothly interpolate current frame to target frame
-  const lerpFactor = 0.08; 
-  const diff = targetFrameIndex - currentFrameIndex;
-
-  if (Math.abs(diff) < 0.01) {
-    currentFrameIndex = targetFrameIndex;
-  } else {
-    currentFrameIndex += diff * lerpFactor;
-  }
-
-  const roundedFrame = Math.round(currentFrameIndex);
-  if (activeCfg.images[roundedFrame]) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Draw using full canvas.width and height (already scaled by DPR)
-    drawImageProp(ctx, activeCfg.images[roundedFrame], 0, 0, canvas.width, canvas.height);
-  }
-
-  requestAnimationFrame(renderLoop);
+  triggerRender();
 };
 
 // Handle window resize dynamically and switch layouts
@@ -189,6 +203,8 @@ const handleResize = () => {
     preloadImagesForMode(activeMode);
     // Map current progress to the new frame size
     updateFrameIndex();
+  } else {
+    triggerRender();
   }
 };
 
