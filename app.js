@@ -32,21 +32,15 @@ const pad = (num, size) => {
   return s;
 };
 
-// Helper to get base path for subfolder hosting (like GitHub Pages /animated/)
-const getBasePath = () => {
-  const path = window.location.pathname;
-  if (path.endsWith('/') || path.endsWith('.html')) {
-    const lastSlash = path.lastIndexOf('/');
-    return path.substring(0, lastSlash + 1);
-  }
-  return path + '/';
-};
-const BASE_PATH = getBasePath();
+// Enforce trailing slash to ensure relative paths resolve correctly on subfolder hosting (like GitHub Pages)
+if (!window.location.pathname.endsWith('/') && !window.location.pathname.match(/\.[a-zA-Z0-9]+$/)) {
+  window.location.replace(window.location.href + '/');
+}
 
-// Generate image source path based on layout mode and base directory path
+// Generate image source path based on layout mode
 const getFrameSrc = (mode, index) => {
   const cfg = CONFIG[mode];
-  return `${BASE_PATH}${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
+  return `${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
 };
 
 // Preload Images for a specific layout mode progressively
