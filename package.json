@@ -1,0 +1,8 @@
+{
+  "name": "aura-architects-animation",
+  "version": "1.0.0",
+  "description": "Premium scroll-driven building renovation animation website",
+  "scripts": {
+    "build": "echo 'Static build complete'"
+  }
+}
