@@ -791,27 +791,42 @@ h2 {
 
 /* --- Responsive Adaptations --- */
 @media (max-width: 968px) {
+  #scroll-container {
+    position: relative !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #smooth-content {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  body {
+    overflow-y: auto !important;
+  }
+
   .grid-2 {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
   
   .reveal-text {
-    font-size: 3.2rem;
+    font-size: 2.5rem;
   }
   
   h2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
   
   .glass-card {
-    padding: 2.5rem;
+    padding: 1.8rem;
   }
 
   .scroll-section {
-    padding: 10rem 5% 5rem;
+    padding: 7rem 5% 4rem;
     align-items: flex-start;
-    min-height: 100vh;
+    min-height: auto;
   }
 
   .nav-links {
@@ -820,14 +835,14 @@ h2 {
 
   .stats-row {
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   .features-highlight-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 4rem;
-    padding-bottom: 4rem;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
   }
 }
 

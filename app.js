@@ -37,6 +37,11 @@ if (!window.location.pathname.endsWith('/') && !window.location.pathname.match(/
   window.location.replace(window.location.href + '/');
 }
 
+// Helper to detect mobile screens or touch devices
+const isMobileDevice = () => {
+  return window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
+
 // Generate image source path based on layout mode
 const getFrameSrc = (mode, index) => {
   const cfg = CONFIG[mode];
@@ -50,7 +55,8 @@ const preloadImagesForMode = (mode, onProgress, onComplete) => {
 
   cfg.promise = new Promise((resolve) => {
     let count = 0;
-    const minRequired = Math.min(25, cfg.totalFrames); // Load first 25 frames for quick interactive start
+    const targetMin = isMobileDevice() ? 8 : 25; // 8 frames on mobile for instant loads, 25 on desktop
+    const minRequired = Math.min(targetMin, cfg.totalFrames);
     let resolved = false;
 
     for (let i = 1; i <= cfg.totalFrames; i++) {
@@ -169,19 +175,28 @@ const renderLoop = () => {
   const activeCfg = CONFIG[currentLayoutMode];
   const lerpFactor = 0.08; // Adjust for scroll/inertia feel (lower is smoother)
 
-  // 1. Lerp scroll position
+  // 1. Scroll position tracking (smooth lerp on desktop, native on mobile)
   const targetScrollY = window.scrollY || document.documentElement.scrollTop;
   const scrollDiff = targetScrollY - smoothScrollY;
+  const isMobile = isMobileDevice();
 
-  if (Math.abs(scrollDiff) < 0.05) {
+  if (isMobile) {
     smoothScrollY = targetScrollY;
   } else {
-    smoothScrollY += scrollDiff * lerpFactor;
+    if (Math.abs(scrollDiff) < 0.05) {
+      smoothScrollY = targetScrollY;
+    } else {
+      smoothScrollY += scrollDiff * lerpFactor;
+    }
   }
 
-  // 2. Translate floating content container smoothly
+  // 2. Translate floating content container smoothly (desktop only to prevent mobile scroll lag)
   if (smoothContent) {
-    smoothContent.style.transform = `translate3d(0, -${Math.round(smoothScrollY)}px, 0)`;
+    if (isMobile) {
+      smoothContent.style.transform = "none";
+    } else {
+      smoothContent.style.transform = `translate3d(0, -${Math.round(smoothScrollY)}px, 0)`;
+    }
   }
 
   // 3. Map smoothScrollY to target frame index (completing the animation 100% right before entering contact form)
