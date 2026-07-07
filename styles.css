@@ -109,6 +109,7 @@ body {
   height: 100vh;
   z-index: 1;
   pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 #animation-canvas {

@@ -201,6 +201,19 @@ const renderLoop = () => {
     drawImageProp(ctx, activeCfg.images[roundedFrame], 0, 0, canvas.width, canvas.height);
   }
 
+  // 6. Fade out background animation as contact form enters viewport
+  const contactSection = document.getElementById("contact");
+  const canvasContainer = document.querySelector(".canvas-container");
+  if (contactSection && canvasContainer) {
+    const contactRect = contactSection.getBoundingClientRect();
+    if (contactRect.top < window.innerHeight) {
+      const opacity = Math.max(0, contactRect.top / window.innerHeight);
+      canvasContainer.style.opacity = opacity;
+    } else {
+      canvasContainer.style.opacity = 1;
+    }
+  }
+
   // Continue rendering if positions haven't settled
   if (Math.abs(scrollDiff) > 0.05 || Math.abs(frameDiff) > 0.01) {
     requestAnimationFrame(renderLoop);

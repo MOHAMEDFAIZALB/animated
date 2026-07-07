@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA | Press Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=11">
+  <style>
+    body {
+      background-color: #08090a;
+      overflow-y: auto !important;
+    }
+    #scroll-container {
+      position: relative !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
+    .subpage-hero {
+      padding: 12rem 5% 4rem;
+      text-align: center;
+    }
+    .subpage-hero h1 {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+    }
+    .subpage-hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      letter-spacing: 0.2rem;
+      text-transform: uppercase;
+    }
+    .content-section {
+      padding: 2rem 5% 8rem;
+    }
+    .text-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(14, 16, 18, 0.4);
+      border: 1px solid var(--card-border);
+      padding: 4rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .text-container h2 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin: 2.5rem 0 1rem;
+      color: var(--accent-color);
+    }
+    .text-container h2:first-of-type {
+      margin-top: 0;
+    }
+    .text-container p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .download-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .download-card {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.01);
+      padding: 2rem;
+      border-radius: 6px;
+      text-align: center;
+      transition: var(--transition-smooth);
+    }
+    .download-card:hover {
+      border-color: var(--accent-color);
+      background: rgba(229, 193, 88, 0.02);
+    }
+    .download-card h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .download-card p {
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .back-btn-container {
+      margin-top: 4rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <a href="index.html" class="logo" style="text-decoration: none;">AURA</a>
+    <nav class="nav-links">
+      <a href="index.html#hero">Genesis</a>
+      <a href="index.html#restoration">Restoration</a>
+      <a href="index.html#engineering">Engineering</a>
+      <a href="index.html#masterpiece">Masterpiece</a>
+      <a href="index.html#contact" class="btn btn-primary">Bespoke Blueprint</a>
+    </nav>
+  </header>
+
+  <main id="scroll-container">
+    
+    <div class="subpage-hero">
+      <h1>Press Kit</h1>
+      <p>Studio Assets & Publications</p>
+    </div>
+
+    <section class="content-section">
+      <div class="text-container">
+        <h2>Brand Overview</h2>
+        <p>AURA is an architectural design studio specializing in structural transformations, luxury minimalistic restorations, and sustainable high-end estates. Founded in 2026, the studio combines interactive modeling blueprints with bespoke material crafting.</p>
+        
+        <h2>Press Resources</h2>
+        <p>Access high-definition imagery, vector logos, principal portraits, and executive briefs. For specific editorial inquiries or site visit requests, contact press@aura.architect.</p>
+
+        <div class="download-grid">
+          <div class="download-card">
+            <h3>Media Kit (PDF)</h3>
+            <p>Studio history, bios, and catalog projects.</p>
+            <a href="index.html" class="btn btn-outline" style="padding: 0.6rem 1.5rem; font-size: 0.7rem;">Download</a>
+          </div>
+          <div class="download-card">
+            <h3>HD Assets Bundle</h3>
+            <p>Brand logo configurations & project blueprints.</p>
+            <a href="index.html" class="btn btn-outline" style="padding: 0.6rem 1.5rem; font-size: 0.7rem;">Download</a>
+          </div>
+        </div>
+
+        <div class="back-btn-container">
+          <a href="index.html" class="btn btn-outline">Return to Studio</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div class="footer-brand">
+          <h2>AURA</h2>
+          <p>Designing Space. Reimagining Time.</p>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="press.html">Press Kit</a>
+        </div>
+        <p class="copyright">&copy; 2026 AURA Architecture & Luxury Estates. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </main>
+
+</body>
+</html>
