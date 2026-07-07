@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aura | Reimagining Architecture & Luxury Renovations</title>
-  <meta name="description" content="Witness the premium transformation of legacy structures into modern luxury architectural masterpieces. Scroll to build.">
+  <title>AURA | Bespoke Architecture & Luxury Estates</title>
+  <meta name="description" content="Witness the transformation of heritage estates into ultra-modern luxury masterpieces. Scroll to build.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
@@ -16,7 +16,7 @@
   <div id="loader">
     <div class="loader-content">
       <h1 class="loader-logo">AURA</h1>
-      <p class="loader-text">Preparing the structural blueprints...</p>
+      <p class="loader-text">Loading Structural Blueprints</p>
       <div class="progress-container">
         <div id="progress-bar"></div>
       </div>
@@ -31,6 +31,16 @@
     <div class="premium-noise"></div>
   </div>
 
+  <!-- Success Modal for Consultation Form -->
+  <div id="success-modal">
+    <div class="modal-card">
+      <div class="modal-icon">✓</div>
+      <h2>Blueprint Initiated</h2>
+      <p>Thank you. A principal design partner has been assigned to your consultation. We will reach out to you within 24 hours.</p>
+      <button class="btn btn-primary" id="close-modal-btn">Return to Studio</button>
+    </div>
+  </div>
+
   <!-- Smooth Scroll Container -->
   <main id="scroll-container">
 
@@ -42,148 +52,185 @@
         <a href="#restoration">Restoration</a>
         <a href="#engineering">Engineering</a>
         <a href="#masterpiece">Masterpiece</a>
-        <a href="#contact" class="btn btn-primary">Book Consultation</a>
+        <a href="#contact" class="btn btn-primary">Bespoke Blueprint</a>
       </nav>
     </header>
 
     <div id="smooth-content">
 
-    <!-- Section 1: Hero -->
-    <section id="hero" class="scroll-section active">
-      <div class="container hero-content">
-        <span class="tag">The Art of Metamorphosis</span>
-        <h1 class="reveal-text">Reimagining Legacy</h1>
-        <p class="lead">Scroll to witness the architectural transformation of a forgotten estate into a modern luxury masterpiece.</p>
-        <div class="scroll-indicator">
-          <div class="mouse">
-            <div class="wheel"></div>
+      <!-- Section 1: Hero -->
+      <section id="hero" class="scroll-section active">
+        <div class="container hero-content">
+          <span class="tag">METAMORPHOSIS OF SPACE</span>
+          <h1 class="reveal-text">Reimagining<br><span class="highlight">Bespoke Legacies</span></h1>
+          <p class="lead">Scroll to witness the real-time architectural evolution of an abandoned estate into an ultra-modern luxury sanctuary.</p>
+          
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Schedule Private Tour</a>
+            <a href="#restoration" class="btn btn-outline">Explore Genesis</a>
           </div>
-          <span>Scroll Down to Build</span>
-        </div>
-      </div>
-    </section>
 
-    <!-- Section 2: Legacy & Deconstruction (Frames ~0-90) -->
-    <section id="restoration" class="scroll-section">
-      <div class="container grid-2">
-        <div class="glass-card left">
-          <span class="step-num">01 / DECONSTRUCTION</span>
-          <h2>Honoring the Foundations</h2>
-          <p>Every masterpiece begins with an appreciation of what was. We analyze the historical footprint, reinforcing structural integrity while carving out space for modern evolution.</p>
-          <div class="spec-list">
-            <div class="spec-item">
-              <span class="spec-val">1948</span>
-              <span class="spec-lbl">Original Build</span>
+          <div class="scroll-indicator">
+            <div class="mouse">
+              <div class="wheel"></div>
             </div>
-            <div class="spec-item">
-              <span class="spec-val">100%</span>
-              <span class="spec-lbl">Structural Reinforcement</span>
-            </div>
+            <span>SCROLL TO CONSTRUCT</span>
           </div>
         </div>
-        <div></div> <!-- Empty right column for canvas visibility -->
-      </div>
-    </section>
+      </section>
 
-    <!-- Section 3: Engineering & Construction (Frames ~90-210) -->
-    <section id="engineering" class="scroll-section">
-      <div class="container grid-2">
-        <div></div> <!-- Empty left column for canvas visibility -->
-        <div class="glass-card right">
-          <span class="step-num">02 / CRAFTSMANSHIP</span>
-          <h2>Precision Engineering</h2>
-          <p>Integrating state-of-the-art materials, eco-conscious insulation, and high-performance scaffolding. Our team of master craftsmen shape the new exterior lines in real time.</p>
-          <div class="features">
-            <div class="feat">
-              <strong>Sustainable Design</strong>
-              <p>Solar-integrated roofing tiles and advanced thermal glazing.</p>
+      <!-- Section 2: Legacy & Deconstruction -->
+      <section id="restoration" class="scroll-section">
+        <div class="container grid-2">
+          <div class="glass-card left">
+            <span class="step-num">01 / DECONSTRUCTION</span>
+            <h2>Honoring the Foundation</h2>
+            <p class="description">Every masterpiece starts with respecting history. We carefully evaluate the structural grid, reinforcing load points while opening layout spaces for architectural light.</p>
+            
+            <!-- Interactive Tabs -->
+            <div class="interactive-tabs">
+              <div class="tab-headers">
+                <button class="tab-btn active" data-tab="reinforce">Reinforcement</button>
+                <button class="tab-btn" data-tab="heritage">Heritage Conservation</button>
+              </div>
+              <div class="tab-contents">
+                <div class="tab-pane active" id="tab-reinforce">
+                  <p>We inject high-strength structural concrete and add tensioned steel reinforcement grids to make the foundation stable for multi-generational longevity.</p>
+                </div>
+                <div class="tab-pane" id="tab-heritage">
+                  <p>Original masonry and brick accents are restored and cataloged, preserving the texture and narrative profile of the original 1948 homestead.</p>
+                </div>
+              </div>
             </div>
-            <div class="feat">
-              <strong>Premium Materials</strong>
-              <p>Imported cedar siding, reinforced steel, and self-cleaning concrete.</p>
+
+            <div class="spec-list">
+              <div class="spec-item">
+                <span class="spec-val">1948</span>
+                <span class="spec-lbl">Original Era</span>
+              </div>
+              <div class="spec-item">
+                <span class="spec-val">2.4k</span>
+                <span class="spec-lbl">Tons Reinforced</span>
+              </div>
+            </div>
+          </div>
+          <div></div> <!-- Spacer for canvas framing -->
+        </div>
+      </section>
+
+      <!-- Section 3: Engineering & Craftsmanship -->
+      <section id="engineering" class="scroll-section">
+        <div class="container grid-2">
+          <div></div> <!-- Spacer for canvas framing -->
+          <div class="glass-card right">
+            <span class="step-num">02 / CRAFTSMANSHIP</span>
+            <h2>Precision and Technology</h2>
+            <p class="description">We integrate advanced ecological systems and premium tactile materials, crafting clean architectural lines with micro-millimeter precision.</p>
+            
+            <!-- Interactive Tabs -->
+            <div class="interactive-tabs">
+              <div class="tab-headers">
+                <button class="tab-btn active" data-tab="eco">Eco Materials</button>
+                <button class="tab-btn" data-tab="smart">Smart Automation</button>
+              </div>
+              <div class="tab-contents">
+                <div class="tab-pane active" id="tab-eco">
+                  <p>Incorporating solar-integrated slate tiling, triple-glazed low-E thermal windows, and structural cedar cladding that dynamically insulates weather variations.</p>
+                </div>
+                <div class="tab-pane" id="tab-smart">
+                  <p>Fully integrated Control4 smart systems. Controls lighting arrays, climate partitions, and hidden security barriers directly from a central interface.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="features">
+              <div class="feat">
+                <strong>Structural Precision</strong>
+                <p>Carbon-fiber framing and structural glass wall systems.</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Section 4: Final Masterpiece (Frames ~210-300) -->
-    <section id="masterpiece" class="scroll-section">
-      <div class="container">
-        <div class="glass-card center text-center">
-          <span class="step-num">03 / TRANSFORMATION</span>
-          <h2>The Modern Sanctuary</h2>
-          <p class="large-text">A harmonious convergence of heritage, light, and luxury minimalism.</p>
-          <div class="stats-row">
-            <div class="stat-box">
-              <h3>5,400</h3>
-              <p>Sq. Footage</p>
-            </div>
-            <div class="stat-box">
-              <h3>A+++</h3>
-              <p>Energy Rating</p>
-            </div>
-            <div class="stat-box">
-              <h3>Smart</h3>
-              <p>Home Integration</p>
+      <!-- Section 4: Final Masterpiece -->
+      <section id="masterpiece" class="scroll-section">
+        <div class="container">
+          <div class="glass-card center text-center">
+            <span class="step-num">03 / COMPLETED METAMORPHOSIS</span>
+            <h2>The Sanctuary</h2>
+            <p class="large-text">A convergence of heritage, light, and luxury minimalism.</p>
+            <div class="stats-row">
+              <div class="stat-box">
+                <h3>5,400</h3>
+                <p>Sq. Footage</p>
+              </div>
+              <div class="stat-box">
+                <h3>A+++</h3>
+                <p>Energy Rating</p>
+              </div>
+              <div class="stat-box">
+                <h3>0.08s</h3>
+                <p>Damping Response</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Section 5: Call to Action / Contact -->
-    <section id="contact" class="scroll-section">
-      <div class="container grid-2">
-        <div class="contact-text">
-          <h2>Create Your Own Metamorphosis</h2>
-          <p>Ready to elevate your residential vision? Speak with our principal architects and design consultants to begin your journey.</p>
-          <div class="contact-details">
-            <p><strong>HQ:</strong> 100 Premier Blvd, Suite 400</p>
-            <p><strong>Email:</strong> design@aura.architect</p>
-            <p><strong>Call:</strong> +1 (800) 555-AURA</p>
+      <!-- Section 5: Consultation Form -->
+      <section id="contact" class="scroll-section">
+        <div class="container grid-2">
+          <div class="contact-text">
+            <span class="tag">CONNECT WITH THE STUDIO</span>
+            <h2>Create Your Own Sanctuary</h2>
+            <p class="description">Begin the journey of transforming your estate. Connect with our principal architect to explore blueprints, design guidelines, and timeline options.</p>
+            <div class="contact-details">
+              <p><strong>Studio HQ:</strong> 100 Premier Boulevard, Suite 400</p>
+              <p><strong>Direct Desk:</strong> +1 (800) 555-AURA</p>
+              <p><strong>Inquiries:</strong> design@aura.architect</p>
+            </div>
+          </div>
+          <div class="glass-card form-card">
+            <h3>Request Consultation</h3>
+            <form id="consultation-form">
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required placeholder="E.g., Charles Sterling">
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required placeholder="E.g., charles@sterling.com">
+              </div>
+              <div class="form-group">
+                <label for="project">Project Classification</label>
+                <select id="project">
+                  <option value="full">Full Scale Estate Renovation</option>
+                  <option value="new">New Architectural Build</option>
+                  <option value="interior">Interior Architecture & Styling</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Initialize Blueprint</button>
+            </form>
           </div>
         </div>
-        <div class="glass-card form-card">
-          <h3>Request a Consultation</h3>
-          <form id="consultation-form" onsubmit="event.preventDefault(); alert('Thank you! Our principal architect will contact you shortly.');">
-            <div class="form-group">
-              <label for="name">Full Name</label>
-              <input type="text" id="name" required placeholder="Alexander Mercer">
-            </div>
-            <div class="form-group">
-              <label for="email">Email Address</label>
-              <input type="email" id="email" required placeholder="alex@domain.com">
-            </div>
-            <div class="form-group">
-              <label for="project">Project Scope</label>
-              <select id="project">
-                <option>Full Scale Estate Renovation</option>
-                <option>New Architectural Build</option>
-                <option>Interior Architecture & Styling</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Initialize Blueprint</button>
-          </form>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="container footer-content">
-        <div class="footer-brand">
-          <h2>AURA</h2>
-          <p>Designing space. Reimagining time.</p>
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="container footer-content">
+          <div class="footer-brand">
+            <h2>AURA</h2>
+            <p>Designing Space. Reimagining Time.</p>
+          </div>
+          <div class="footer-links">
+            <a href="#hero">Privacy Policy</a>
+            <a href="#hero">Terms of Service</a>
+            <a href="#hero">Press Kit</a>
+          </div>
+          <p class="copyright">&copy; 2026 AURA Architecture & Luxury Estates. All rights reserved.</p>
         </div>
-        <div class="footer-links">
-          <a href="#hero">Privacy Policy</a>
-          <a href="#hero">Terms of Service</a>
-          <a href="#hero">Press Kit</a>
-        </div>
-        <p class="copyright">&copy; 2026 AURA Architecture & Luxury Renovations. All rights reserved.</p>
-      </div>
-    </footer>
+      </footer>
 
     </div>
   </main>

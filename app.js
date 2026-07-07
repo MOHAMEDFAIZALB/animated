@@ -260,6 +260,93 @@ const setupIntersectionObserver = () => {
   sections.forEach((section) => observer.observe(section));
 };
 
+// --- Functional Features ---
+
+// 1. Smooth Virtual Anchor Navigation
+const setupSmoothAnchorNavigation = () => {
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute("href");
+      const targetEl = document.querySelector(targetId);
+
+      if (targetEl) {
+        // Calculate absolute top offset inside the smooth Content container
+        const rect = targetEl.getBoundingClientRect();
+        const targetOffset = rect.top + smoothScrollY;
+
+        // Perform standard smooth scrolling on the window body
+        window.scrollTo({
+          top: targetOffset,
+          behavior: "smooth"
+        });
+      }
+    });
+  });
+};
+
+// 2. Interactive Specifications Tabs
+const setupSpecsTabs = () => {
+  const tabContainers = document.querySelectorAll(".interactive-tabs");
+
+  tabContainers.forEach((container) => {
+    const buttons = container.querySelectorAll(".tab-btn");
+    const panes = container.querySelectorAll(".tab-pane");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetTab = btn.getAttribute("data-tab");
+
+        // Remove active class from all buttons and panes in this tab container
+        buttons.forEach((b) => b.classList.remove("active"));
+        panes.forEach((p) => p.classList.remove("active"));
+
+        // Activate clicked button and target pane
+        btn.classList.add("active");
+        const activePane = container.querySelector(`#tab-${targetTab}`);
+        if (activePane) {
+          activePane.classList.add("active");
+        }
+
+        // Sync body height in case tab contents have changed the height of the document
+        setTimeout(syncBodyHeight, 100);
+      });
+    });
+  });
+};
+
+// 3. Custom Success Modal & Form Handling
+const setupConsultationForm = () => {
+  const form = document.getElementById("consultation-form");
+  const modal = document.getElementById("success-modal");
+  const closeBtn = document.getElementById("close-modal-btn");
+
+  if (form && modal) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // Show Custom Success Modal
+      modal.classList.add("active");
+
+      // Reset Form fields
+      form.reset();
+    });
+  }
+
+  if (closeBtn && modal) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+
+    // Close modal if clicking overlay backdrop
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  }
+};
+
 // Initialize App
 const init = async () => {
   window.addEventListener("resize", handleResize);
@@ -293,8 +380,11 @@ const init = async () => {
   // Scroll listener
   window.addEventListener("scroll", updateFrameIndex);
 
-  // Setup text reveals
+  // Setup core logic features
   setupIntersectionObserver();
+  setupSmoothAnchorNavigation();
+  setupSpecsTabs();
+  setupConsultationForm();
 
   // Extra height syncs to account for late stylesheet/fonts loading
   setTimeout(syncBodyHeight, 1000);
