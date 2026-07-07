@@ -32,10 +32,21 @@ const pad = (num, size) => {
   return s;
 };
 
-// Generate image source path based on layout mode
+// Helper to get base path for subfolder hosting (like GitHub Pages /animated/)
+const getBasePath = () => {
+  const path = window.location.pathname;
+  if (path.endsWith('/') || path.endsWith('.html')) {
+    const lastSlash = path.lastIndexOf('/');
+    return path.substring(0, lastSlash + 1);
+  }
+  return path + '/';
+};
+const BASE_PATH = getBasePath();
+
+// Generate image source path based on layout mode and base directory path
 const getFrameSrc = (mode, index) => {
   const cfg = CONFIG[mode];
-  return `${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
+  return `${BASE_PATH}${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
 };
 
 // Preload Images for a specific layout mode progressively
