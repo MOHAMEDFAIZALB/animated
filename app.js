@@ -1,6 +1,21 @@
-// --- Config ---
-const totalFrames = 300;
-const images = [];
+// --- Config & State ---
+const CONFIG = {
+  desktop: {
+    totalFrames: 300,
+    folder: "",
+    loadedCount: 0,
+    images: [],
+    promise: null
+  },
+  mobile: {
+    totalFrames: 240,
+    folder: "building/",
+    loadedCount: 0,
+    images: [],
+    promise: null
+  }
+};
+
 const canvas = document.getElementById("animation-canvas");
 const ctx = canvas.getContext("2d");
 
@@ -16,48 +31,46 @@ const pad = (num, size) => {
   return s;
 };
 
-// Generate image source path
-const getFrameSrc = (index) => {
-  // Filename format: ezgif-frame-001.jpg?v=2
-  return `ezgif-frame-${pad(index, 3)}.jpg?v=2`;
+// Generate image source path based on layout mode
+const getFrameSrc = (mode, index) => {
+  const cfg = CONFIG[mode];
+  return `${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
 };
 
-// Preload Images
-let loadedCount = 0;
-const preloadImages = () => {
-  return new Promise((resolve) => {
-    for (let i = 1; i <= totalFrames; i++) {
+// Preload Images for a specific layout mode
+const preloadImagesForMode = (mode, onProgress, onComplete) => {
+  const cfg = CONFIG[mode];
+  if (cfg.promise) return cfg.promise; // Avoid duplicate preloading
+
+  cfg.promise = new Promise((resolve) => {
+    let count = 0;
+    for (let i = 1; i <= cfg.totalFrames; i++) {
       const img = new Image();
       img.onload = () => {
-        loadedCount++;
-        const percent = Math.floor((loadedCount / totalFrames) * 100);
-        progressBar.style.width = `${percent}%`;
-        progressText.innerText = `${percent}%`;
-
-        if (loadedCount === totalFrames) {
-          // Hide loader with a slight delay for visual smoothness
-          setTimeout(() => {
-            loader.style.opacity = "0";
-            loader.style.visibility = "hidden";
-            resolve();
-          }, 600);
+        count++;
+        cfg.loadedCount = count;
+        if (onProgress) onProgress(count, cfg.totalFrames);
+        if (count === cfg.totalFrames) {
+          resolve();
+          if (onComplete) onComplete();
         }
       };
       
       img.onerror = () => {
-        // Fallback for failed loads to keep progression running
-        loadedCount++;
-        if (loadedCount === totalFrames) {
-          loader.style.opacity = "0";
-          loader.style.visibility = "hidden";
+        count++;
+        cfg.loadedCount = count;
+        if (onProgress) onProgress(count, cfg.totalFrames);
+        if (count === cfg.totalFrames) {
           resolve();
+          if (onComplete) onComplete();
         }
       };
 
-      img.src = getFrameSrc(i);
-      images.push(img);
+      img.src = getFrameSrc(mode, i);
+      cfg.images.push(img);
     }
   });
+  return cfg.promise;
 };
 
 // Drawing Images to Canvas (implementing "cover" behavior with pixel alignment)
@@ -118,27 +131,35 @@ const resizeCanvas = () => {
   canvas.style.height = `${window.innerHeight}px`;
 };
 
+// Detect active layout mode (desktop vs. mobile)
+const getActiveLayoutMode = () => {
+  return window.innerWidth < 768 ? "mobile" : "desktop";
+};
+
+let currentLayoutMode = getActiveLayoutMode();
 let currentFrameIndex = 0;
 let targetFrameIndex = 0;
 
-// Update target frame index based on scroll position
+// Update target frame index based on scroll position and active config
 const updateFrameIndex = () => {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
   
   if (maxScroll <= 0) return;
 
+  const activeCfg = CONFIG[currentLayoutMode];
   const scrollFraction = scrollTop / maxScroll;
   targetFrameIndex = Math.min(
-    totalFrames - 1,
-    Math.floor(scrollFraction * totalFrames)
+    activeCfg.totalFrames - 1,
+    Math.floor(scrollFraction * activeCfg.totalFrames)
   );
 };
 
 // Smooth Render Loop (Lerping frame index)
 const renderLoop = () => {
+  const activeCfg = CONFIG[currentLayoutMode];
   // Smoothly interpolate current frame to target frame
-  const lerpFactor = 0.08; // Adjust between 0.01 (extremely slow/smooth) and 1.0 (instant)
+  const lerpFactor = 0.08; 
   const diff = targetFrameIndex - currentFrameIndex;
 
   if (Math.abs(diff) < 0.01) {
@@ -148,13 +169,27 @@ const renderLoop = () => {
   }
 
   const roundedFrame = Math.round(currentFrameIndex);
-  if (images[roundedFrame]) {
+  if (activeCfg.images[roundedFrame]) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw using full canvas.width and height (already scaled by DPR)
-    drawImageProp(ctx, images[roundedFrame], 0, 0, canvas.width, canvas.height);
+    drawImageProp(ctx, activeCfg.images[roundedFrame], 0, 0, canvas.width, canvas.height);
   }
 
   requestAnimationFrame(renderLoop);
+};
+
+// Handle window resize dynamically and switch layouts
+const handleResize = () => {
+  resizeCanvas();
+
+  const activeMode = getActiveLayoutMode();
+  if (activeMode !== currentLayoutMode) {
+    currentLayoutMode = activeMode;
+    // Load the other set if not already loaded
+    preloadImagesForMode(activeMode);
+    // Map current progress to the new frame size
+    updateFrameIndex();
+  }
 };
 
 // Setup intersection observer for narrative fading in
@@ -181,10 +216,29 @@ const setupIntersectionObserver = () => {
 // Initialize App
 const init = async () => {
   // Set up resize handler and run it initially to set dimensions with DPR
-  window.addEventListener("resize", resizeCanvas);
+  window.addEventListener("resize", handleResize);
   resizeCanvas();
 
-  await preloadImages();
+  const initialMode = getActiveLayoutMode();
+  currentLayoutMode = initialMode;
+
+  // Preload frames for the initial layout mode
+  await preloadImagesForMode(
+    initialMode,
+    // onProgress:
+    (count, total) => {
+      const percent = Math.floor((count / total) * 100);
+      progressBar.style.width = `${percent}%`;
+      progressText.innerText = `${percent}%`;
+    },
+    // onComplete:
+    () => {
+      setTimeout(() => {
+        loader.style.opacity = "0";
+        loader.style.visibility = "hidden";
+      }, 600);
+    }
+  );
   
   // Start the smooth continuous animation loop
   renderLoop();
@@ -194,6 +248,10 @@ const init = async () => {
 
   // Setup text reveals
   setupIntersectionObserver();
+
+  // Background-preload the other layout mode so switching on resize is instant
+  const inactiveMode = initialMode === "desktop" ? "mobile" : "desktop";
+  preloadImagesForMode(inactiveMode);
 };
 
 init();
