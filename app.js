@@ -37,32 +37,47 @@ const getFrameSrc = (mode, index) => {
   return `${cfg.folder}ezgif-frame-${pad(index, 3)}.jpg?v=2`;
 };
 
-// Preload Images for a specific layout mode
+// Preload Images for a specific layout mode progressively
 const preloadImagesForMode = (mode, onProgress, onComplete) => {
   const cfg = CONFIG[mode];
   if (cfg.promise) return cfg.promise; // Avoid duplicate preloading
 
   cfg.promise = new Promise((resolve) => {
     let count = 0;
+    const minRequired = Math.min(25, cfg.totalFrames); // Wait for only 25 frames (~10% load) to make the site load 10x faster!
+    let resolved = false;
+
     for (let i = 1; i <= cfg.totalFrames; i++) {
       const img = new Image();
       img.onload = () => {
         count++;
         cfg.loadedCount = count;
-        if (onProgress) onProgress(count, cfg.totalFrames);
-        if (count === cfg.totalFrames) {
-          resolve();
-          if (onComplete) onComplete();
+
+        if (!resolved) {
+          const percent = Math.min(100, Math.floor((count / minRequired) * 100));
+          if (onProgress) onProgress(percent);
+
+          if (count >= minRequired) {
+            resolved = true;
+            resolve();
+            if (onComplete) onComplete();
+          }
         }
       };
       
       img.onerror = () => {
         count++;
         cfg.loadedCount = count;
-        if (onProgress) onProgress(count, cfg.totalFrames);
-        if (count === cfg.totalFrames) {
-          resolve();
-          if (onComplete) onComplete();
+
+        if (!resolved) {
+          const percent = Math.min(100, Math.floor((count / minRequired) * 100));
+          if (onProgress) onProgress(percent);
+
+          if (count >= minRequired) {
+            resolved = true;
+            resolve();
+            if (onComplete) onComplete();
+          }
         }
       };
 
@@ -242,8 +257,7 @@ const init = async () => {
   await preloadImagesForMode(
     initialMode,
     // onProgress:
-    (count, total) => {
-      const percent = Math.floor((count / total) * 100);
+    (percent) => {
       progressBar.style.width = `${percent}%`;
       progressText.innerText = `${percent}%`;
     },
